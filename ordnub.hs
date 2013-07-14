@@ -18,7 +18,7 @@ localNub l            = nub' l []
         | otherwise   = x : nub' xs (x:ls)
 
 
-ordNubState :: (Eq a, Ord a, Show a) => [a] -> [a]
+ordNubState :: (Eq a, Ord a) => [a] -> [a]
 ordNubState xs = evalState (filterM f xs) empty
   where
     f x = do set <- get
@@ -27,7 +27,7 @@ ordNubState xs = evalState (filterM f xs) empty
                else put (insert x set) >> return True
 
 
-ordNub :: (Eq a, Ord a, Show a) => [a] -> [a]
+ordNub :: (Eq a, Ord a) => [a] -> [a]
 ordNub l = go l empty id
   where
     go []     _ dlist = dlist []
