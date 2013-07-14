@@ -1,0 +1,16 @@
+name:                ordnub
+version:             0.1.0.0
+synopsis:            Faster nub (remove duplicates)
+description:         Data.List.nub is O(n²). This one is O(n log n) by requiring an Ord instance.
+license:             MIT
+license-file:        LICENSE
+author:              Niklas Hambuechen
+maintainer:          Niklas Hambuechen <mail@nh2.me>
+category:            Data
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable ordnub
+  main-is:             ordnub.hs
+  build-depends:       base, containers, mtl, criterion, QuickCheck
+  default-language:    Haskell98
