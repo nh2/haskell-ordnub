@@ -51,47 +51,59 @@ ordNubStateDlist l = evalState (f l id) empty
 
 main :: IO ()
 main = defaultMain
-  [ bench "benchmarks:" $ nf id 'x' -- just so that I can comment out easily
+  [ bgroup "simple"
+    [ bench "nub [1..100]"  $ nf nub [1..100::Int]
+    , bench "nub [1..1000]" $ nf nub [1..1000::Int]
+    , bench "nub (replicate 1000 1)" $ nf nub (replicate 1000 (1::Int))
 
-  -- , bench "1000 nub" $ nf nub l1000
-  -- , bench "500  nub" $ nf nub l500
-  , bench "100  nub" $ nf nub l100
-  , bench "50   nub" $ nf nub l50
-  , bench "10   nub" $ nf nub l10
-  , bench "5    nub" $ nf nub l5
-  , bench "1    nub" $ nf nub l1
+    , bench "ordNub [1..100]"  $ nf ordNub [1..100::Int]
+    , bench "ordNub [1..1000]" $ nf ordNub [1..1000::Int]
+    , bench "ordNub (replicate 1000 1)" $ nf ordNub (replicate 1000 (1::Int))
+    ]
 
-  -- , bench "1000 localNub" $ nf localNub l1000
-  -- , bench "500  localNub" $ nf localNub l500
-  , bench "100  localNub" $ nf localNub l100
-  , bench "50   localNub" $ nf localNub l50
-  , bench "10   localNub" $ nf localNub l10
-  , bench "5    localNub" $ nf localNub l5
-  , bench "1    localNub" $ nf localNub l1
+  , bgroup ""
+    [ bench "benchmarks:" $ nf id 'x' -- just so that I can comment out easily
 
-  -- , bench "1000 ordNub" $ nf ordNub l1000
-  -- , bench "500  ordNub" $ nf ordNub l500
-  , bench "100  ordNub" $ nf ordNub l100
-  , bench "50   ordNub" $ nf ordNub l50
-  , bench "10   ordNub" $ nf ordNub l10
-  , bench "5    ordNub" $ nf ordNub l5
-  , bench "1    ordNub" $ nf ordNub l1
+    -- , bench "1000 nub" $ nf nub l1000
+    -- , bench "500  nub" $ nf nub l500
+    , bench "100  nub" $ nf nub l100
+    , bench "50   nub" $ nf nub l50
+    , bench "10   nub" $ nf nub l10
+    , bench "5    nub" $ nf nub l5
+    , bench "1    nub" $ nf nub l1
 
-  -- , bench "1000 ordNubState" $ nf ordNubState l1000
-  -- , bench "500  ordNubState" $ nf ordNubState l500
-  , bench "100  ordNubState" $ nf ordNubState l100
-  , bench "50   ordNubState" $ nf ordNubState l50
-  , bench "10   ordNubState" $ nf ordNubState l10
-  , bench "5    ordNubState" $ nf ordNubState l5
-  , bench "1    ordNubState" $ nf ordNubState l1
+    -- , bench "1000 localNub" $ nf localNub l1000
+    -- , bench "500  localNub" $ nf localNub l500
+    , bench "100  localNub" $ nf localNub l100
+    , bench "50   localNub" $ nf localNub l50
+    , bench "10   localNub" $ nf localNub l10
+    , bench "5    localNub" $ nf localNub l5
+    , bench "1    localNub" $ nf localNub l1
 
-  -- , bench "1000 ordNubStateDlist" $ nf ordNubStateDlist l1000
-  -- , bench "500  ordNubStateDlist" $ nf ordNubStateDlist l500
-  , bench "100  ordNubStateDlist" $ nf ordNubStateDlist l100
-  , bench "50   ordNubStateDlist" $ nf ordNubStateDlist l50
-  , bench "10   ordNubStateDlist" $ nf ordNubStateDlist l10
-  , bench "5    ordNubStateDlist" $ nf ordNubStateDlist l5
-  , bench "1    ordNubStateDlist" $ nf ordNubStateDlist l1
+    -- -- , bench "1000 ordNub" $ nf ordNub l1000
+    -- -- , bench "500  ordNub" $ nf ordNub l500
+    , bench "100  ordNub" $ nf ordNub l100
+    , bench "50   ordNub" $ nf ordNub l50
+    , bench "10   ordNub" $ nf ordNub l10
+    , bench "5    ordNub" $ nf ordNub l5
+    , bench "1    ordNub" $ nf ordNub l1
+
+    -- -- , bench "1000 ordNubState" $ nf ordNubState l1000
+    -- -- , bench "500  ordNubState" $ nf ordNubState l500
+    , bench "100  ordNubState" $ nf ordNubState l100
+    , bench "50   ordNubState" $ nf ordNubState l50
+    , bench "10   ordNubState" $ nf ordNubState l10
+    , bench "5    ordNubState" $ nf ordNubState l5
+    , bench "1    ordNubState" $ nf ordNubState l1
+
+    -- , bench "1000 ordNubStateDlist" $ nf ordNubStateDlist l1000
+    -- , bench "500  ordNubStateDlist" $ nf ordNubStateDlist l500
+    , bench "100  ordNubStateDlist" $ nf ordNubStateDlist l100
+    , bench "50   ordNubStateDlist" $ nf ordNubStateDlist l50
+    , bench "10   ordNubStateDlist" $ nf ordNubStateDlist l10
+    , bench "5    ordNubStateDlist" $ nf ordNubStateDlist l5
+    , bench "1    ordNubStateDlist" $ nf ordNubStateDlist l1
+    ]
   ]
   where
     -- l1000 = concat $ replicbate 10 [1..1000::Int]
