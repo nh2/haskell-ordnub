@@ -12,6 +12,9 @@ import Test.QuickCheck
 import Test.QuickCheck.Function
 import Criterion.Main
 
+import qualified Data.Set as S
+import Data.Set (Set)
+
 
 -- Just copied from Data.List
 localNub :: (Eq a) => [a] -> [a]
@@ -71,6 +74,30 @@ ordNubBy p f l = go Map.empty l
     elem_by eq y (x:xs) = y `eq` x || elem_by eq y xs
 
 
+-- Richard Bird's derivation from "Functional Pearls of Algorithm Design"
+birdNub :: Ord a => [a] -> [a]
+birdNub = hub' S.empty S.empty . preprocess
+
+-- Why not nub = S.toList . S.fromList ?
+
+preprocess :: Ord a => [a] -> [(a, Set a)]
+preprocess xs = zip xs (tail (scanr S.insert S.empty xs))
+
+hub' ps ws [] = []
+hub' ps ws ((x,xs):xss) =
+  if S.member x ps then hub' ps ws xss else
+    case (S.member x xs, S.member x ws) of
+      (False, False) -> eus ++ [x] ++ hub' qs S.empty xss
+      (False, True)  -> eus ++ [x] ++ hub' qs vs xss
+      (True, False)  -> hub' ps (S.insert x us) xss
+      (True, True)   -> hub' ps ws xss
+    where (us, vs) = S.split x ws
+          eus      = S.elems us
+          qs       = foldr S.insert ps eus
+
+setNub :: Ord a => [a] -> [a]
+setNub = S.toList . S.fromList
+
 main :: IO ()
 main = defaultMain
   [ bgroup "simple"
@@ -81,6 +108,14 @@ main = defaultMain
     , bench "ordNub [1..100]"  $ nf ordNub [1..100::Int]
     , bench "ordNub [1..1000]" $ nf ordNub [1..1000::Int]
     , bench "ordNub (replicate 1000 1)" $ nf ordNub (replicate 1000 (1::Int))
+
+    , bench "birdNub [1..100]"  $ nf birdNub [1..100::Int]
+    , bench "birdNub [1..1000]" $ nf birdNub [1..1000::Int]
+    , bench "birdNub (replicate 1000 1)" $ nf birdNub (replicate 1000 (1::Int))
+
+    , bench "setNub [1..100]"  $ nf setNub [1..100::Int]
+    , bench "setNub [1..1000]" $ nf setNub [1..1000::Int]
+    , bench "setNub (replicate 1000 1)" $ nf setNub (replicate 1000 (1::Int))
     ]
 
   , bgroup ""
@@ -126,6 +161,22 @@ main = defaultMain
     , bench "5    ordNubStateDlist" $ nf ordNubStateDlist l5
     , bench "1    ordNubStateDlist" $ nf ordNubStateDlist l1
 
+    -- , bench "1000 birdNub" $ nf birdNub l1000
+    -- , bench "500  birdNub" $ nf birdNub l500
+    , bench "100  birdNub" $ nf birdNub l100
+    , bench "50   birdNub" $ nf birdNub l50
+    , bench "10   birdNub" $ nf birdNub l10
+    , bench "5    birdNub" $ nf birdNub l5
+    , bench "1    birdNub" $ nf birdNub l1
+
+    -- , bench "1000 setNub" $ nf setNub l1000
+    -- , bench "500  setNub" $ nf setNub l500
+    , bench "100  setNub" $ nf setNub l100
+    , bench "50   setNub" $ nf setNub l50
+    , bench "10   setNub" $ nf setNub l10
+    , bench "5    setNub" $ nf setNub l5
+    , bench "1    setNub" $ nf setNub l1
+
     -- `by` functions
 
     -- , bench "1000 nubBy" $ nf (nubBy (\a b -> a `quot` 2 == b `quot` 2) (==)) l1000
@@ -161,6 +212,8 @@ tests = mapM_ (quickCheckWith stdArgs{ maxSuccess = 1000, maxSize = 200 })
   , isLikeNub ordNub
   , isLikeNub ordNubState
   , isLikeNub ordNubStateDlist
+  , isLikeNub birdNub
+  , isLikeNub setNub
 
   -- ordNubBy tests
   , property $ \(l :: [(Int, Int)]) -> ordNubBy fst ((>) `on` snd) l
