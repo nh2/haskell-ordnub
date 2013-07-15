@@ -38,6 +38,17 @@ ordNubState xs = evalState (filterM f xs) empty
                else put (insert x set) >> return True
 
 
+-- Using a state monad with a dlist instead of filterM
+ordNubStateDlist :: (Ord a) => [a] -> [a]
+ordNubStateDlist l = evalState (f l id) empty
+  where
+    f []     dlist = return $ dlist []
+    f (x:xs) dlist = do set <- get
+                        if member x set
+                          then f xs dlist
+                          else put (insert x set) >> f xs (dlist . (x:))
+
+
 main :: IO ()
 main = defaultMain
   [ bench "benchmarks:" $ nf id 'x' -- just so that I can comment out easily
@@ -73,6 +84,14 @@ main = defaultMain
   , bench "10   ordNubState" $ nf ordNubState l10
   , bench "5    ordNubState" $ nf ordNubState l5
   , bench "1    ordNubState" $ nf ordNubState l1
+
+  -- , bench "1000 ordNubStateDlist" $ nf ordNubStateDlist l1000
+  -- , bench "500  ordNubStateDlist" $ nf ordNubStateDlist l500
+  , bench "100  ordNubStateDlist" $ nf ordNubStateDlist l100
+  , bench "50   ordNubStateDlist" $ nf ordNubStateDlist l50
+  , bench "10   ordNubStateDlist" $ nf ordNubStateDlist l10
+  , bench "5    ordNubStateDlist" $ nf ordNubStateDlist l5
+  , bench "1    ordNubStateDlist" $ nf ordNubStateDlist l1
   ]
   where
     -- l1000 = concat $ replicbate 10 [1..1000::Int]
@@ -88,6 +107,7 @@ tests :: IO ()
 tests = mapM_ quickCheck [ isLikeNub localNub
                          , isLikeNub ordNub
                          , isLikeNub ordNubState
+                         , isLikeNub ordNubStateDlist
                          ]
   where
     isLikeNub f = property (\l -> nub l == f (l :: [Int]))
