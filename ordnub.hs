@@ -4,6 +4,8 @@ import Control.Monad.State.Strict
 import Data.Int (Int64)
 import Data.List (nub)
 import Data.Set (empty, fromList, insert, member)
+import qualified Data.HashSet as H
+import qualified Data.Hashable as H
 
 import Test.QuickCheck
 import Criterion.Main
@@ -26,6 +28,16 @@ ordNub l = go empty l
     go _ []     = []
     go s (x:xs) = if x `member` s then go s xs
                                   else x : go (insert x s) xs
+
+-- Taken From Yi
+hashNub :: (H.Hashable a, Eq a) => [a] -> [a]
+hashNub l = go H.empty l
+  where
+    go _ []     = []
+    go s (x:xs) = if x `H.member` s then go s xs
+                                    else x : go (H.insert x s) xs
+
+
 
 
 -- Using a state monad
@@ -64,29 +76,42 @@ main = defaultMain
   , bgroup ""
     [ bench "benchmarks:" $ nf id 'x' -- just so that I can comment out easily
 
-    -- , bench "1000 nub" $ nf nub l1000
-    -- , bench "500  nub" $ nf nub l500
-    , bench "100  nub" $ nf nub l100
-    , bench "50   nub" $ nf nub l50
-    , bench "10   nub" $ nf nub l10
-    , bench "5    nub" $ nf nub l5
-    , bench "1    nub" $ nf nub l1
+  -- , bench "1000 nub" $ nf nub l1000
+  -- , bench "500  nub" $ nf nub l500
+  , bgroup "nub"
+      [ bench "100" $ nf nub l100
+      , bench "50 " $ nf nub l50
+      , bench "10 " $ nf nub l10
+      , bench "5  " $ nf nub l5
+      , bench "1  " $ nf nub l1
+      ]
 
-    -- , bench "1000 localNub" $ nf localNub l1000
-    -- , bench "500  localNub" $ nf localNub l500
-    , bench "100  localNub" $ nf localNub l100
-    , bench "50   localNub" $ nf localNub l50
-    , bench "10   localNub" $ nf localNub l10
-    , bench "5    localNub" $ nf localNub l5
-    , bench "1    localNub" $ nf localNub l1
+  -- , bench "1000 localNub" $ nf localNub l1000
+  -- , bench "500  localNub" $ nf localNub l500
+  , bench "100  localNub" $ nf localNub l100
+  , bench "50   localNub" $ nf localNub l50
+  , bench "10   localNub" $ nf localNub l10
+  , bench "5    localNub" $ nf localNub l5
+  , bench "1    localNub" $ nf localNub l1
 
-    -- -- , bench "1000 ordNub" $ nf ordNub l1000
-    -- -- , bench "500  ordNub" $ nf ordNub l500
-    , bench "100  ordNub" $ nf ordNub l100
-    , bench "50   ordNub" $ nf ordNub l50
-    , bench "10   ordNub" $ nf ordNub l10
-    , bench "5    ordNub" $ nf ordNub l5
-    , bench "1    ordNub" $ nf ordNub l1
+  , bgroup "ordNub"
+      [ bench "1000 ordNub" $ nf ordNub l1000
+      , bench "500  ordNub" $ nf ordNub l500
+      , bench "100" $ nf ordNub l100
+      , bench "50 " $ nf ordNub l50
+      , bench "10 " $ nf ordNub l10
+      , bench "5  " $ nf ordNub l5
+      , bench "1  " $ nf ordNub l1
+      ]
+  , bgroup "hashNub"
+      [ bench "1000 ordNub" $ nf hashNub l1000
+      , bench "500  ordNub" $ nf hashNub l500
+      , bench "100" $ nf hashNub l100
+      , bench "50 " $ nf hashNub l50
+      , bench "10 " $ nf hashNub l10
+      , bench "5  " $ nf hashNub l5
+      , bench "1  " $ nf hashNub l1
+      ]
 
     -- -- , bench "1000 ordNubState" $ nf ordNubState l1000
     -- -- , bench "500  ordNubState" $ nf ordNubState l500
@@ -106,8 +131,8 @@ main = defaultMain
     ]
   ]
   where
-    -- l1000 = concat $ replicbate 10 [1..1000::Int]
-    -- l500  = concat $ replicate 20  [1..500::Int]
+    l1000 = concat $ replicate 10 [1..1000::Int]
+    l500  = concat $ replicate 20  [1..500::Int]
     l100  = concat $ replicate 100 [1..100::Int]
     l50   = concat $ replicate 200  [1..50::Int]
     l10   = concat $ replicate 1000 [1..10::Int]
@@ -118,6 +143,7 @@ main = defaultMain
 tests :: IO ()
 tests = mapM_ quickCheck [ isLikeNub localNub
                          , isLikeNub ordNub
+                         , isLikeNub hashNub
                          , isLikeNub ordNubState
                          , isLikeNub ordNubStateDlist
                          ]

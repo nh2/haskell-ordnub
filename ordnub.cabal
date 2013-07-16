@@ -12,6 +12,7 @@ cabal-version:       >=1.10
 
 executable ordnub
   main-is:             ordnub.hs
-  build-depends:       base, containers, mtl, criterion, QuickCheck
+  build-depends:       base, containers, mtl, criterion, QuickCheck,
+                       unordered-containers, hashable
   default-language:    Haskell98
   ghc-options:         -O2
