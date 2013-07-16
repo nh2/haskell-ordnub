@@ -85,15 +85,15 @@ main = defaultMain
         , bench "5  " $ nf nub l5
         , bench "1  " $ nf nub l1
         ]
-    , bgroup "localNub"
-        -- , bench "1000" $ nf localNub l1000
-        -- , bench "500 " $ nf localNub l500
-        [ bench "100" $ nf localNub l100
-        , bench "50 " $ nf localNub l50
-        , bench "10 " $ nf localNub l10
-        , bench "5  " $ nf localNub l5
-        , bench "1  " $ nf localNub l1
-        ]
+    -- , bgroup "localNub"
+    --     -- , bench "1000" $ nf localNub l1000
+    --     -- , bench "500 " $ nf localNub l500
+    --     [ bench "100" $ nf localNub l100
+    --     , bench "50 " $ nf localNub l50
+    --     , bench "10 " $ nf localNub l10
+    --     , bench "5  " $ nf localNub l5
+    --     , bench "1  " $ nf localNub l1
+    --     ]
     , bgroup "ordNub"
         [ bench "1000" $ nf ordNub l1000
         , bench "500 " $ nf ordNub l500
