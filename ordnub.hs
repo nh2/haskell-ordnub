@@ -76,58 +76,60 @@ main = defaultMain
   , bgroup ""
     [ bench "benchmarks:" $ nf id 'x' -- just so that I can comment out easily
 
-  -- , bench "1000 nub" $ nf nub l1000
-  -- , bench "500  nub" $ nf nub l500
-  , bgroup "nub"
-      [ bench "100" $ nf nub l100
-      , bench "50 " $ nf nub l50
-      , bench "10 " $ nf nub l10
-      , bench "5  " $ nf nub l5
-      , bench "1  " $ nf nub l1
-      ]
-
-  -- , bench "1000 localNub" $ nf localNub l1000
-  -- , bench "500  localNub" $ nf localNub l500
-  , bench "100  localNub" $ nf localNub l100
-  , bench "50   localNub" $ nf localNub l50
-  , bench "10   localNub" $ nf localNub l10
-  , bench "5    localNub" $ nf localNub l5
-  , bench "1    localNub" $ nf localNub l1
-
-  , bgroup "ordNub"
-      [ bench "1000 ordNub" $ nf ordNub l1000
-      , bench "500  ordNub" $ nf ordNub l500
-      , bench "100" $ nf ordNub l100
-      , bench "50 " $ nf ordNub l50
-      , bench "10 " $ nf ordNub l10
-      , bench "5  " $ nf ordNub l5
-      , bench "1  " $ nf ordNub l1
-      ]
-  , bgroup "hashNub"
-      [ bench "1000 ordNub" $ nf hashNub l1000
-      , bench "500  ordNub" $ nf hashNub l500
-      , bench "100" $ nf hashNub l100
-      , bench "50 " $ nf hashNub l50
-      , bench "10 " $ nf hashNub l10
-      , bench "5  " $ nf hashNub l5
-      , bench "1  " $ nf hashNub l1
-      ]
-
-    -- -- , bench "1000 ordNubState" $ nf ordNubState l1000
-    -- -- , bench "500  ordNubState" $ nf ordNubState l500
-    , bench "100  ordNubState" $ nf ordNubState l100
-    , bench "50   ordNubState" $ nf ordNubState l50
-    , bench "10   ordNubState" $ nf ordNubState l10
-    , bench "5    ordNubState" $ nf ordNubState l5
-    , bench "1    ordNubState" $ nf ordNubState l1
-
-    -- , bench "1000 ordNubStateDlist" $ nf ordNubStateDlist l1000
-    -- , bench "500  ordNubStateDlist" $ nf ordNubStateDlist l500
-    , bench "100  ordNubStateDlist" $ nf ordNubStateDlist l100
-    , bench "50   ordNubStateDlist" $ nf ordNubStateDlist l50
-    , bench "10   ordNubStateDlist" $ nf ordNubStateDlist l10
-    , bench "5    ordNubStateDlist" $ nf ordNubStateDlist l5
-    , bench "1    ordNubStateDlist" $ nf ordNubStateDlist l1
+    , bgroup "nub"
+        -- , bench "1000" $ nf nub l1000
+        -- , bench "500 " $ nf nub l500
+        [ bench "100" $ nf nub l100
+        , bench "50 " $ nf nub l50
+        , bench "10 " $ nf nub l10
+        , bench "5  " $ nf nub l5
+        , bench "1  " $ nf nub l1
+        ]
+    , bgroup "localNub"
+        -- , bench "1000" $ nf localNub l1000
+        -- , bench "500 " $ nf localNub l500
+        [ bench "100" $ nf localNub l100
+        , bench "50 " $ nf localNub l50
+        , bench "10 " $ nf localNub l10
+        , bench "5  " $ nf localNub l5
+        , bench "1  " $ nf localNub l1
+        ]
+    , bgroup "ordNub"
+        [ bench "1000" $ nf ordNub l1000
+        , bench "500 " $ nf ordNub l500
+        , bench "100" $ nf ordNub l100
+        , bench "50 " $ nf ordNub l50
+        , bench "10 " $ nf ordNub l10
+        , bench "5  " $ nf ordNub l5
+        , bench "1  " $ nf ordNub l1
+        ]
+    , bgroup "hashNub"
+        [ bench "1000" $ nf hashNub l1000
+        , bench "500 " $ nf hashNub l500
+        , bench "100" $ nf hashNub l100
+        , bench "50 " $ nf hashNub l50
+        , bench "10 " $ nf hashNub l10
+        , bench "5  " $ nf hashNub l5
+        , bench "1  " $ nf hashNub l1
+        ]
+    , bgroup "ordNubState"
+       -- , bench "1000" $ nf ordNubState l1000
+       -- , bench "500 " $ nf ordNubState l500
+       [ bench "100" $ nf ordNubState l100
+       , bench "50 " $ nf ordNubState l50
+       , bench "10 " $ nf ordNubState l10
+       , bench "5  " $ nf ordNubState l5
+       , bench "1  " $ nf ordNubState l1
+       ]
+    , bgroup "ordNubStateDlist"
+       -- , bench "1000" $ nf ordNubStateDlist l1000
+       -- , bench "500 " $ nf ordNubStateDlist l500
+       [ bench "100" $ nf ordNubStateDlist l100
+       , bench "50 " $ nf ordNubStateDlist l50
+       , bench "10 " $ nf ordNubStateDlist l10
+       , bench "5  " $ nf ordNubStateDlist l5
+       , bench "1  " $ nf ordNubStateDlist l1
+       ]
     ]
   ]
   where
