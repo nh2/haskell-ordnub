@@ -4,13 +4,11 @@ module Main where
 
 import Control.Monad.State.Strict
 import Data.Function (on)
-import Data.Int (Int64)
 import Data.List (nub, nubBy)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 
 import Test.QuickCheck
-import Text.Show.Functions
 import Test.QuickCheck.Function
 import Criterion.Main
 
@@ -58,14 +56,14 @@ ordNubStateDlist l = evalState (f l id) Set.empty
 -- When removing duplicates, the first function assigns the input to a bucket,
 -- the second function checks whether it is already in the bucket (linear search).
 ordNubBy :: (Ord b) => (a -> b) -> (a -> a -> Bool) -> [a] -> [a]
-ordNubBy p eq l = go Map.empty l
+ordNubBy p f l = go Map.empty l
   where
     go _ []     = []
     go m (x:xs) = let b = p x in case b `Map.lookup` m of
                     Nothing     -> x : go (Map.insert b [x] m) xs
                     Just bucket
-                      | elem_by eq x bucket -> go m xs
-                      | otherwise           -> x : go (Map.insert b (x:bucket) m) xs
+                      | elem_by f x bucket -> go m xs
+                      | otherwise          -> x : go (Map.insert b (x:bucket) m) xs
 
     -- From the Data.List source code.
     elem_by :: (a -> a -> Bool) -> a -> [a] -> Bool
