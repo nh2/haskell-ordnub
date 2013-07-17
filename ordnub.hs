@@ -3,7 +3,7 @@ module Main where
 import Control.Monad.State.Strict
 import Data.Int (Int64)
 import Data.List (nub)
-import Data.Set (empty, fromList, insert, member)
+import qualified Data.Set as Set
 
 import Test.QuickCheck
 import Criterion.Main
@@ -21,32 +21,32 @@ localNub l            = nub' l []
 
 -- Taken From Yi
 ordNub :: (Ord a) => [a] -> [a]
-ordNub l = go empty l
+ordNub l = go Set.empty l
   where
     go _ []     = []
-    go s (x:xs) = if x `member` s then go s xs
-                                  else x : go (insert x s) xs
+    go s (x:xs) = if x `Set.member` s then go s xs
+                                      else x : go (Set.insert x s) xs
 
 
 -- Using a state monad
 ordNubState :: (Ord a) => [a] -> [a]
-ordNubState xs = evalState (filterM f xs) empty
+ordNubState xs = evalState (filterM f xs) Set.empty
   where
     f x = do set <- get
-             if member x set
+             if Set.member x set
                then return False
-               else put (insert x set) >> return True
+               else put (Set.insert x set) >> return True
 
 
 -- Using a state monad with a dlist instead of filterM
 ordNubStateDlist :: (Ord a) => [a] -> [a]
-ordNubStateDlist l = evalState (f l id) empty
+ordNubStateDlist l = evalState (f l id) Set.empty
   where
     f []     dlist = return $ dlist []
     f (x:xs) dlist = do set <- get
-                        if member x set
+                        if Set.member x set
                           then f xs dlist
-                          else put (insert x set) >> f xs (dlist . (x:))
+                          else put (Set.insert x set) >> f xs (dlist . (x:))
 
 
 main :: IO ()
