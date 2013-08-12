@@ -2,8 +2,9 @@ module Main where
 
 import Control.Monad.State.Strict
 import Data.Int (Int64)
-import Data.List (nub)
+import Data.List (sort, nub)
 import Data.Set (empty, fromList, insert, member)
+import qualified Data.Set as Set
 import qualified Data.HashSet as H
 import qualified Data.Hashable as H
 
@@ -59,6 +60,16 @@ ordNubStateDlist l = evalState (f l id) empty
                         if member x set
                           then f xs dlist
                           else put (insert x set) >> f xs (dlist . (x:))
+
+
+sortNub :: Ord a => [a] -> [a]
+sortNub = Set.toAscList . Set.fromList
+
+sortNubDef :: Ord a => [a] -> [a]
+sortNubDef = sort . ordNub
+
+sortNubDef2 :: Ord a => [a] -> [a]
+sortNubDef2 = sort . nub
 
 
 main :: IO ()
@@ -130,6 +141,35 @@ main = defaultMain
        , bench "5  " $ nf ordNubStateDlist l5
        , bench "1  " $ nf ordNubStateDlist l1
        ]
+    , bgroup "sorting"
+        [ bgroup "sortNub"
+          [ bench "1000" $ nf sortNub l1000
+          , bench "500 " $ nf sortNub l500
+          , bench "100" $ nf sortNub l100
+          , bench "50 " $ nf sortNub l50
+          , bench "10 " $ nf sortNub l10
+          , bench "5  " $ nf sortNub l5
+          , bench "1  " $ nf sortNub l1
+          ]
+        , bgroup "sort . ordNub"
+          [ bench "1000" $ nf sortNubDef l1000
+          , bench "500 " $ nf sortNubDef l500
+          , bench "100" $ nf sortNubDef l100
+          , bench "50 " $ nf sortNubDef l50
+          , bench "10 " $ nf sortNubDef l10
+          , bench "5  " $ nf sortNubDef l5
+          , bench "1  " $ nf sortNubDef l1
+          ]
+        , bgroup "sort . nub"
+          [ bench "1000" $ nf sortNubDef2 l1000
+          , bench "500 " $ nf sortNubDef2 l500
+          , bench "100" $ nf sortNubDef2 l100
+          , bench "50 " $ nf sortNubDef2 l50
+          , bench "10 " $ nf sortNubDef2 l10
+          , bench "5  " $ nf sortNubDef2 l5
+          , bench "1  " $ nf sortNubDef2 l1
+          ]
+        ]
     ]
   ]
   where
@@ -148,6 +188,8 @@ tests = mapM_ quickCheck [ isLikeNub localNub
                          , isLikeNub hashNub
                          , isLikeNub ordNubState
                          , isLikeNub ordNubStateDlist
+                         , sortSame
                          ]
   where
     isLikeNub f = property (\l -> nub l == f (l :: [Int]))
+    sortSame = property (\l -> sortNub l == sort (nub (l :: [Int])))
