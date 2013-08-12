@@ -151,6 +151,15 @@ main = defaultMain
           , bench "5  " $ nf sortNub l5
           , bench "1  " $ nf sortNub l1
           ]
+        , bgroup "sortNub reversed"
+          [ bench "1000" $ nf sortNub $ reverse l1000
+          , bench "500 " $ nf sortNub $ reverse l500
+          , bench "100" $ nf sortNub $ reverse l100
+          , bench "50 " $ nf sortNub $ reverse l50
+          , bench "10 " $ nf sortNub $ reverse l10
+          , bench "5  " $ nf sortNub $ reverse l5
+          , bench "1  " $ nf sortNub $ reverse l1
+          ]
         , bgroup "sort . ordNub"
           [ bench "1000" $ nf sortNubDef l1000
           , bench "500 " $ nf sortNubDef l500
@@ -160,11 +169,17 @@ main = defaultMain
           , bench "5  " $ nf sortNubDef l5
           , bench "1  " $ nf sortNubDef l1
           ]
+        , bgroup "sort . ordNub reversed"
+          [ bench "1000" $ nf sortNubDef $ reverse l1000
+          , bench "500 " $ nf sortNubDef $ reverse l500
+          , bench "100" $ nf sortNubDef $ reverse l100
+          , bench "50 " $ nf sortNubDef $ reverse l50
+          , bench "10 " $ nf sortNubDef $ reverse l10
+          , bench "5  " $ nf sortNubDef $ reverse l5
+          , bench "1  " $ nf sortNubDef $ reverse l1
+          ]
         , bgroup "sort . nub"
-          [ bench "1000" $ nf sortNubDef2 l1000
-          , bench "500 " $ nf sortNubDef2 l500
-          , bench "100" $ nf sortNubDef2 l100
-          , bench "50 " $ nf sortNubDef2 l50
+          [ bench "50 " $ nf sortNubDef2 l50
           , bench "10 " $ nf sortNubDef2 l10
           , bench "5  " $ nf sortNubDef2 l5
           , bench "1  " $ nf sortNubDef2 l1
