@@ -24,3 +24,7 @@ ordNub l = go Set.empty l
     go s (x:xs) = if x `Set.member` s then go s xs
                                       else x : go (Set.insert x s) xs
 ```
+
+### Other Data.List functions you NEVER want to use
+
+`\\`, `union`, `intersect`
