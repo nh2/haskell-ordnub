@@ -74,10 +74,14 @@ ordNubBy p f l = go Map.empty l
 main :: IO ()
 main = defaultMain
   [ bgroup "simple"
-    [ bench "nub [1..100]"  $ nf nub [1..100::Int]
+    [ bench "nub [1]"       $ nf nub [1::Int]
+    , bench "nub [1..10]"   $ nf nub [1..10::Int]
+    , bench "nub [1..100]"  $ nf nub [1..100::Int]
     , bench "nub [1..1000]" $ nf nub [1..1000::Int]
     , bench "nub (replicate 1000 1)" $ nf nub (replicate 1000 (1::Int))
 
+    , bench "ordNub [1]"       $ nf ordNub [1::Int]
+    , bench "ordNub [1..10]"   $ nf ordNub [1..10::Int]
     , bench "ordNub [1..100]"  $ nf ordNub [1..100::Int]
     , bench "ordNub [1..1000]" $ nf ordNub [1..1000::Int]
     , bench "ordNub (replicate 1000 1)" $ nf ordNub (replicate 1000 (1::Int))
