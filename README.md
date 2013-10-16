@@ -8,6 +8,7 @@ Data.List.nub is O(n²). This one is O(n log n) by requiring an Ord instance.
 * `PACKAGES_USING_NUB.txt` contains all packages which use `nub` (made with a quick grep).
 It's not the most accurate since some packages define their own `nub`, but that's a minority.
 
+**This thing here is not a library.** It is a benchmark suite. [View results here](http://htmlpreview.github.io/?https://github.com/nh2/haskell-ordnub/blob/master/report.html).
 
 Don't use nub
 -------------
