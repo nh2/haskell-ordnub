@@ -167,6 +167,7 @@ main = defaultMain
     , bench "5    ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l5
     , bench "1    ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l1
 
+
     -- `by` functions
 
     -- , bench "1000 nubBy" $ nf (nubBy (\a b -> a `quot` 2 == b `quot` 2) (==)) l1000
@@ -184,6 +185,15 @@ main = defaultMain
     , bench "10   ordNubBy" $ nf (ordNubBy (`quot` 2) (==)) l10
     , bench "5    ordNubBy" $ nf (ordNubBy (`quot` 2) (==)) l5
     , bench "1    ordNubBy" $ nf (ordNubBy (`quot` 2) (==)) l1
+    ]
+
+  -- Other benchmarks, and what people contributed
+  , bgroup "other"
+    [ bench "nub yitz 1"    $ nf nub    (2 : replicate 100000 1 ++ [3] :: [Int])
+    , bench "ordNub yitz 1" $ nf ordNub (2 : replicate 100000 1 ++ [3] :: [Int])
+
+    , bench "nub yitz 2"    $ nf nub    ([3,2,1] ++ take 100000 (cycle [3,2,1]) ++ [4] :: [Int])
+    , bench "ordNub yitz 2" $ nf ordNub ([3,2,1] ++ take 100000 (cycle [3,2,1]) ++ [4] :: [Int])
     ]
   ]
   where
