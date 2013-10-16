@@ -3,6 +3,7 @@
 module Main where
 
 import Control.Monad.State.Strict
+import qualified Control.Monad.State.Lazy as SL
 import Data.Function (on)
 import Data.List (nub, nubBy)
 import qualified Data.Map as Map
@@ -42,6 +43,16 @@ ordNubState xs = evalState (filterM f xs) Set.empty
                else put (Set.insert x set) >> return True
 
 
+-- Using a lazy state monad
+ordNubStateLazy :: (Ord a) => [a] -> [a]
+ordNubStateLazy xs = SL.evalState (filterM f xs) Set.empty
+  where
+    f x = do set <- SL.get
+             if Set.member x set
+               then return False
+               else SL.put (Set.insert x set) >> return True
+
+
 -- Using a state monad with a dlist instead of filterM
 ordNubStateDlist :: (Ord a) => [a] -> [a]
 ordNubStateDlist l = evalState (f l id) Set.empty
@@ -51,6 +62,16 @@ ordNubStateDlist l = evalState (f l id) Set.empty
                         if Set.member x set
                           then f xs dlist
                           else put (Set.insert x set) >> f xs (dlist . (x:))
+
+-- Using a lazy state monad with a dlist instead of filterM
+ordNubStateLazyDlist :: (Ord a) => [a] -> [a]
+ordNubStateLazyDlist l = SL.evalState (f l id) Set.empty
+  where
+    f []     dlist = return $ dlist []
+    f (x:xs) dlist = do set <- SL.get
+                        if Set.member x set
+                          then f xs dlist
+                          else SL.put (Set.insert x set) >> f xs (dlist . (x:))
 
 
 -- When removing duplicates, the first function assigns the input to a bucket,
@@ -122,6 +143,14 @@ main = defaultMain
     , bench "5    ordNubState" $ nf ordNubState l5
     , bench "1    ordNubState" $ nf ordNubState l1
 
+    -- , bench "1000 ordNubStateLazy" $ nf ordNubStateLazy l1000
+    -- , bench "500  ordNubStateLazy" $ nf ordNubStateLazy l500
+    , bench "100  ordNubStateLazy" $ nf ordNubStateLazy l100
+    , bench "50   ordNubStateLazy" $ nf ordNubStateLazy l50
+    , bench "10   ordNubStateLazy" $ nf ordNubStateLazy l10
+    , bench "5    ordNubStateLazy" $ nf ordNubStateLazy l5
+    , bench "1    ordNubStateLazy" $ nf ordNubStateLazy l1
+
     -- , bench "1000 ordNubStateDlist" $ nf ordNubStateDlist l1000
     -- , bench "500  ordNubStateDlist" $ nf ordNubStateDlist l500
     , bench "100  ordNubStateDlist" $ nf ordNubStateDlist l100
@@ -129,6 +158,14 @@ main = defaultMain
     , bench "10   ordNubStateDlist" $ nf ordNubStateDlist l10
     , bench "5    ordNubStateDlist" $ nf ordNubStateDlist l5
     , bench "1    ordNubStateDlist" $ nf ordNubStateDlist l1
+
+    -- , bench "1000 ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l1000
+    -- , bench "500  ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l500
+    , bench "100  ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l100
+    , bench "50   ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l50
+    , bench "10   ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l10
+    , bench "5    ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l5
+    , bench "1    ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l1
 
     -- `by` functions
 
