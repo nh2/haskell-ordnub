@@ -55,3 +55,15 @@ listDifference a b = go initHist a
       Just n | n > 0 ->     go (Map.insert x (n-1) hist) xs
       _              -> x : go hist                      xs
 ```
+
+
+The current *O(n log n)* recommendation for `union` is:
+
+```haskell
+import qualified Data.Set as Set
+
+listUnion :: (Ord a) => [a] -> [a] -> [a]
+listUnion a b = a ++ ordNub (filter (`Set.notMember` aSet) b)
+  where
+    aSet = Set.fromList a
+```
