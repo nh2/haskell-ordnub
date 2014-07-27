@@ -67,3 +67,15 @@ listUnion a b = a ++ ordNub (filter (`Set.notMember` aSet) b)
   where
     aSet = Set.fromList a
 ```
+
+
+The current *O(n log n)* recommendation for `intersect` is:
+
+```haskell
+import qualified Data.Set as Set
+
+listIntersect :: (Ord a) => [a] -> [a] -> [a]
+listIntersect a b = filter (`Set.member` bSet) a
+  where
+    bSet = Set.fromList b
+```
