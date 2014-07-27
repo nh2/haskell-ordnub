@@ -39,3 +39,19 @@ Also be aware that they don't work like sets. For example:
 > union [1,2,3,1] [1,4]
 [1,2,3,1,4]
 ```
+
+The current *O(n log n)* recommendation for `\\` is:
+
+```haskell
+import qualified Data.Map.Strict as Map
+
+listDifference :: (Ord a) => [a] -> [a] -> [a]
+listDifference a b = go initHist a
+  where
+    initHist = Map.fromListWith (+) [ (x, 1 :: Int) | x <- b ]
+
+    go _    []     = []
+    go hist (x:xs) = case Map.lookup x hist of
+      Just n | n > 0 ->     go (Map.insert x (n-1) hist) xs
+      _              -> x : go hist                      xs
+```
