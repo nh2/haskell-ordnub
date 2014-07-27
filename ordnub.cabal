@@ -21,3 +21,9 @@ executable listDifference
   build-depends:       base, containers, mtl, criterion, QuickCheck >= 2.7, hspec >= 1.10.0.1
   default-language:    Haskell98
   ghc-options:         -Wall -O2
+
+executable listUnion
+  main-is:             listUnion.hs
+  build-depends:       base, containers, mtl, criterion, QuickCheck >= 2.7, hspec >= 1.10.0.1
+  default-language:    Haskell98
+  ghc-options:         -Wall -O2
