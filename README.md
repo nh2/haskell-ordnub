@@ -29,3 +29,13 @@ ordNub l = go Set.empty l
 ### Other Data.List functions you NEVER want to use
 
 `\\`, `union`, `intersect`
+
+Also be aware that they don't work like sets. For example:
+
+```
+> [1,1,2] \\ [1]
+[1,2]
+
+> union [1,2,3,1] [1,4]
+[1,2,3,1,4]
+```
