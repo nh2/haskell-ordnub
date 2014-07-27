@@ -28,7 +28,7 @@ ordNub l = go Set.empty l
 
 ### Other Data.List functions you NEVER want to use
 
-`\\`, `union`, `intersect`
+`\\`, `union`, `intersect` - they too are *O(n²)*.
 
 Also be aware that they don't work like sets. For example:
 
