@@ -8,6 +8,7 @@ import Data.Function (on)
 import Data.List (nub, nubBy)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import qualified MiniSet as MiniSet
 
 import Test.QuickCheck
 import Test.QuickCheck.Function
@@ -167,6 +168,17 @@ main = defaultMain
     , bench "5    ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l5
     , bench "1    ordNubStateLazyDlist" $ nf ordNubStateLazyDlist l1
 
+    , bench "100  MiniSet.ordNub" $ nf MiniSet.ordNub l100
+    , bench "50   MiniSet.ordNub" $ nf MiniSet.ordNub l50
+    , bench "10   MiniSet.ordNub" $ nf MiniSet.ordNub l10
+    , bench "5    MiniSet.ordNub" $ nf MiniSet.ordNub l5
+    , bench "1    MiniSet.ordNub" $ nf MiniSet.ordNub l1
+
+    , bench "100  MiniSet.ordNubStrictAcc" $ nf MiniSet.ordNubStrictAcc l100
+    , bench "50   MiniSet.ordNubStrictAcc" $ nf MiniSet.ordNubStrictAcc l50
+    , bench "10   MiniSet.ordNubStrictAcc" $ nf MiniSet.ordNubStrictAcc l10
+    , bench "5    MiniSet.ordNubStrictAcc" $ nf MiniSet.ordNubStrictAcc l5
+    , bench "1    MiniSet.ordNubStrictAcc" $ nf MiniSet.ordNubStrictAcc l1
 
     -- `by` functions
 
