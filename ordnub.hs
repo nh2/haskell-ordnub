@@ -9,6 +9,7 @@ import Data.List (nub, nubBy)
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified MiniSet as MiniSet
+import qualified Okasaki as Okasaki
 
 import Test.QuickCheck
 import Test.QuickCheck.Function
@@ -179,6 +180,18 @@ main = defaultMain
     , bench "10   MiniSet.ordNubStrictAcc" $ nf MiniSet.ordNubStrictAcc l10
     , bench "5    MiniSet.ordNubStrictAcc" $ nf MiniSet.ordNubStrictAcc l5
     , bench "1    MiniSet.ordNubStrictAcc" $ nf MiniSet.ordNubStrictAcc l1
+
+    , bench "100  Okasaki.ordNub" $ nf Okasaki.ordNub l100
+    , bench "50   Okasaki.ordNub" $ nf Okasaki.ordNub l50
+    , bench "10   Okasaki.ordNub" $ nf Okasaki.ordNub l10
+    , bench "5    Okasaki.ordNub" $ nf Okasaki.ordNub l5
+    , bench "1    Okasaki.ordNub" $ nf Okasaki.ordNub l1
+
+    , bench "100  Okasaki.ordNubStrictAcc" $ nf Okasaki.ordNubStrictAcc l100
+    , bench "50   Okasaki.ordNubStrictAcc" $ nf Okasaki.ordNubStrictAcc l50
+    , bench "10   Okasaki.ordNubStrictAcc" $ nf Okasaki.ordNubStrictAcc l10
+    , bench "5    Okasaki.ordNubStrictAcc" $ nf Okasaki.ordNubStrictAcc l5
+    , bench "1    Okasaki.ordNubStrictAcc" $ nf Okasaki.ordNubStrictAcc l1
 
     -- `by` functions
 
