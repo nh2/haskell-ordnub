@@ -1,7 +1,7 @@
 ordnub
 ======
 
-Data.List.nub is O(n²). This one is O(n log n) by requiring an Ord instance.
+`Data.List.nub` is O(n²). This one is O(n log n) by requiring an `Ord` instance.
 
 * Also contains a benchmark (`report.html`) that shows that `ordNub` apparently is faster than `nub` in *all* cases.
 
@@ -13,7 +13,13 @@ It's not the most accurate since some packages define their own `nub`, but that'
 Don't use nub
 -------------
 
-If you are looking for a fast `ordNub` function to use in your code, you can use:
+If you are looking for a fast `ordNub` function to use in your code, use:
+
+* [`nubOrd`](https://hackage.haskell.org/package/containers/docs/Data-Containers-ListUtils.html) from `containers`
+
+([stable link](https://hackage.haskell.org/package/containers-0.6.0.1/docs/Data-Containers-ListUtils.html)) which after many years was finally added (also in response to this repo).
+
+If you don't have a new enough `containers` or don't want to depend on it, use:
 
 ```haskell
 import qualified Data.Set as Set
