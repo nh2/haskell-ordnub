@@ -85,3 +85,15 @@ listIntersect a b = filter (`Set.member` bSet) a
   where
     bSet = Set.fromList b
 ```
+
+### More functions
+
+The file [`ordnub.hs`](./ordnub.hs) contains more functions you may be interested in, including:
+
+```haskell
+ordNubByEq :: (Eq a, Ord b) => (a -> b) -> [a] -> [a]
+
+ordNubBy :: (Ord b) => (a -> b) -> (a -> a -> Bool) -> [a] -> [a]
+```
+
+These functions have longer docs so they are not copied into this README.

@@ -76,8 +76,73 @@ ordNubStateLazyDlist l = SL.evalState (f l id) Set.empty
                           else SL.put (Set.insert x set) >> f xs (dlist . (x:))
 
 
--- When removing duplicates, the first function assigns the input to a bucket,
--- the second function checks whether it is already in the bucket (linear search).
+-- | Fast replacement for `nub` when the list elements are only `Eq`,
+-- not `Ord`, but some parts of the involved data types are `Ord`.
+--
+-- It speeds it up deduping @[a]@ by using a projection function @f :: (a -> b)@,
+-- where the @b@ is `Ord`erable (in contrast to the @a@), so that the expensive
+-- /O(n^2)/ @==@ needs to be done only among those elements
+-- that fall into the same @b@-bucket.
+--
+-- @ordNubByEq p l@: When removing duplicates from @l@,
+--
+-- * the given function @p@ assigns each input to a bucket,
+-- * it checks whether it is already in the bucket (linear search with @==@).
+--
+-- Especially useful if you have a data type @a@ that for some reason cannot
+-- have @Ord a@ but only @Eq a@ (such as when it contains data types of
+-- libraries you use that do not acknowledge the importance of `Ord` for
+-- performance).
+--
+-- Example:
+--
+-- > data User =
+-- >   User
+-- >     { name :: Text
+-- >     , location :: Location -- from a library that only provdes `Eq Location`, not `Ord`
+-- >     }
+-- >   deriving (Eq, Show) -- no `Ord` because `Location` does not permit it
+-- >
+-- > deduplicateUsers :: [User] -> [User]
+-- > deduplicateUsers = ordNubByEq name
+--
+-- This way, the expensive quadratic @location@ comparison happens only among
+-- those users that have the same name.
+--
+-- Note that this function serves a different use case than the @containers@
+-- function
+--
+-- > nubOrdOn :: (Ord b) => (a -> b) -> [a] -> [a]
+--
+-- because that one removes @a@ elements even when they are different,
+-- as it has no @Eq a@ constraint and thus cannot fall back to comparing
+-- quadratic @==@ comparison.
+-- In the above example, @nubOrd name@ would keep only 1 user named @"Alex"@
+-- even if there are multiple Alexes with different @location@.
+-- If you this more aggressive, projection-only based removal, then
+-- you must use @nubOrdOn@.
+ordNubByEq :: (Eq a, Ord b) => (a -> b) -> [a] -> [a]
+ordNubByEq p l = ordNubBy p (==) l
+
+
+-- | Fast replacement for `nubBy` when the list elements are
+-- not `Ord`, but some parts of the involved data types are `Ord`.
+--
+-- Like `ordNubByEq`, but with a custom equality function.
+--
+-- Removes duplicates from a list of /unorderable/ elements @[a]@
+-- by using an equality predicate @p :: (a -> a -> Bool)@ (like `nubBy`).
+-- It speeds it up using a projection function @f :: (a -> b)@,
+-- as described in `ordNubByEq`.
+
+-- @ordNubBy p f l@: When removing duplicates from @l@,
+--
+-- * the first function @p@ assigns the each input to a bucket,
+-- * the second function @f@ checks whether it is already in the bucket (linear search).
+--
+-- If you find yourself using @ordNubBy p (==)@, use `ordNubByEq` instead.
+-- Also ckeck whether you want @nubOrdOn@ from containers instead
+-- (see the `ordNubByEq` docs for the difference).
 ordNubBy :: (Ord b) => (a -> b) -> (a -> a -> Bool) -> [a] -> [a]
 ordNubBy p f l = go Map.empty l
   where
