@@ -80,7 +80,7 @@ ordNubStateLazyDlist l = SL.evalState (f l id) Set.empty
 -- | Fast replacement for `nub` when the list elements are only `Eq`,
 -- not `Ord`, but some parts of the involved data types are `Ord`.
 --
--- It speeds it up deduping @[a]@ by using a projection function @f :: (a -> b)@,
+-- It speeds it up deduping @[a]@ by using a projection function @p :: (a -> b)@,
 -- where the @b@ is `Ord`erable (in contrast to the @a@), so that the expensive
 -- /O(n^2)/ @==@ needs to be done only among those elements
 -- that fall into the same @b@-bucket.
@@ -132,8 +132,8 @@ ordNubByEq p l = ordNubBy p (==) l
 -- Like `ordNubByEq`, but with a custom equality function.
 --
 -- Removes duplicates from a list of /unorderable/ elements @[a]@
--- by using an equality predicate @p :: (a -> a -> Bool)@ (like `nubBy`).
--- It speeds it up using a projection function @f :: (a -> b)@,
+-- by using an equality function @f :: (a -> a -> Bool)@ (like `nubBy`).
+-- It speeds it up using a projection function @p :: (a -> b)@,
 -- as described in `ordNubByEq`.
 
 -- @ordNubBy p f l@: When removing duplicates from @l@,
